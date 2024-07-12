@@ -1,3 +1,8 @@
+procfile, requirements.txt, wsgi.py all unfinished - looking to create ci/cd pipeline on github and to deploy on heroku
+
+
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
