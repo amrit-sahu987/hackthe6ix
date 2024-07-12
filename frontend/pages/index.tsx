@@ -11,7 +11,54 @@ function index() {
     });
   }, []);
 
-  return <div>{message}</div>;
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    fetch("http://127.0.0.1:8080/api/echo", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      setMessage(`Username: ${data.username}\nPassword: ${data.password}`);
+      setUsername(''); // Clear the username field
+      setPassword(''); // Clear the password field
+    });
+  }
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        <p>{message}</p>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <input 
+              type="text" 
+              value={username} 
+              onChange={e => setUsername(e.target.value)} 
+              placeholder="Username" 
+              className="App-input" 
+            />
+          </div>
+          <div>
+            <input 
+              type="password" 
+              value={password} 
+              onChange={e => setPassword(e.target.value)} 
+              placeholder="Password" 
+              className="App-input" 
+            />
+            <button type="submit" disabled={!username || !password}>Enter</button>
+          </div>
+        </form>
+      </header>
+    </div>
+  );
 }
 
 export default index;

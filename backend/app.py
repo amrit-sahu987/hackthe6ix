@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 #from flask_restful import reqparse, Api, Resource
 from flask_cors import CORS
 
@@ -18,7 +18,15 @@ api.add_resource(Message, '/api/hello')
 @app.route("/api/home", methods=['GET'])
 def return_home():
     return jsonify({
-        'message': "Hello World"
+        'message': ""
+    })
+
+@app.route("/api/echo", methods=['POST'])
+def echo():
+    data = request.get_json()
+    return jsonify({
+        'username': data.get('username', ''),
+        'password': data.get('password', '')
     })
 
 if __name__ == '__main__':
