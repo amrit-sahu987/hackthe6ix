@@ -21,6 +21,10 @@ def return_home():
         'message': ""
     })
 
+@app.route("/api/btPage", methods=['GET'])
+def bt_page():
+    return app.send_static_file('btPage.tsx')
+
 @app.route("/api/echo", methods=['POST'])
 def echo():
     data = request.get_json()
