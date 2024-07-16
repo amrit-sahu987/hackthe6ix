@@ -41,8 +41,9 @@ function index() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>User Agent: {userAgent}</p> 
-        <p>{message}</p>
+        <h1>Heading</h1>
+        <p className="Text">User Agent: {userAgent}<br /></p>
+        <p className="Text">{message}</p>
         <form onSubmit={handleSubmit}>
           <div>
             <input 
