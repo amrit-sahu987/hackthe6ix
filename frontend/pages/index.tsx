@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 
 function index() {
   const [message, setMessage] = useState("Loading");
+  const [userAgent, setUserAgent] = useState(""); // Add this state to store the user agent
+
 
   useEffect(() => {
     fetch("http://127.0.0.1:8080/api/home")
@@ -9,6 +11,12 @@ function index() {
     .then((data) => {
       setMessage(data.message);
     });
+  }, []);
+
+  useEffect(() => {
+    // Fetch the user agent from the browser
+    const userAgent = navigator.userAgent;
+    setUserAgent(userAgent); // Set the user agent in the state
   }, []);
 
   const [username, setUsername] = useState("");
@@ -34,6 +42,7 @@ function index() {
   return (
     <div className="App">
       <header className="App-header">
+        <p>User Agent: {userAgent}</p> 
         <p>{message}</p>
         <form onSubmit={handleSubmit}>
           <div>
@@ -62,6 +71,8 @@ function index() {
 }
 
 export default index;
+
+
 
 // import Image from "next/image";
 // import { Inter } from "next/font/google";
