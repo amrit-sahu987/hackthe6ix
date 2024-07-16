@@ -14,9 +14,8 @@ function index() {
   }, []);
 
   useEffect(() => {
-    // Fetch the user agent from the browser
     const userAgent = navigator.userAgent;
-    setUserAgent(userAgent); // Set the user agent in the state
+    setUserAgent(userAgent); 
   }, []);
 
   const [username, setUsername] = useState("");
