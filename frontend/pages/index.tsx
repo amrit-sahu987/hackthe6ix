@@ -42,30 +42,34 @@ function index() {
     <div className="App">
       <header className="App-header">
         <h1>Heading</h1>
-        <p className="Text">User Agent: {userAgent}<br /></p>
-        <p className="Text">{message}</p>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <input 
-              type="text" 
-              value={username} 
-              onChange={e => setUsername(e.target.value)} 
-              placeholder="Username" 
-              className="App-input" 
-            />
-          </div>
-          <div>
-            <input 
-              type="password" 
-              value={password} 
-              onChange={e => setPassword(e.target.value)} 
-              placeholder="Password" 
-              className="App-input" 
-            />
-            <button type="submit" disabled={!username || !password}>Sign In</button>
-          </div>
-        </form>
       </header>
+
+      <div>
+      
+      <p className="Text">User Agent: {userAgent}<br /></p>
+      <p className="Text">{message}</p>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <input 
+            type="text" 
+            value={username} 
+            onChange={e => setUsername(e.target.value)} 
+            placeholder="Username" 
+            className="App-input" 
+          />
+        </div>
+        <div>
+          <input 
+            type="password" 
+            value={password} 
+            onChange={e => setPassword(e.target.value)} 
+            placeholder="Password" 
+            className="App-input" 
+          />
+          <button type="submit" disabled={!username || !password}>Sign In</button>
+        </div>
+      </form>
+      </div>
     </div>
   );
 }
