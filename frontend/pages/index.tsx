@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 
 function index() {
   const [message, setMessage] = useState("Loading");
-  const [userAgent, setUserAgent] = useState(""); // Add this state to store the user agent
+  const [userAgent, setUserAgent] = useState(""); 
 
 
   useEffect(() => {
@@ -33,8 +33,8 @@ function index() {
     .then((response) => response.json())
     .then((data) => {
       setMessage(`Username: ${data.username}\nPassword: ${data.password}`);
-      setUsername(''); // Clear the username field
-      setPassword(''); // Clear the password field
+      setUsername(''); 
+      setPassword(''); 
     });
   }
 
