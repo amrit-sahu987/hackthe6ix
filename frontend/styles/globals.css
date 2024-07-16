@@ -24,9 +24,17 @@ form {
   font-size: 1em;
   border-radius: 5px;
   border: 1px solid #ddd;
-  width: 200px;
+  width: 300px;
   color: black; 
   margin-bottom: 10px; 
+}
+
+input:hover {
+  background-color: #ddddddd2;
+}
+
+input:hover::placeholder {
+  color:#4d4d4d;
 }
 
 button {

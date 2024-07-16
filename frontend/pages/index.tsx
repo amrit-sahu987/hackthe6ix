@@ -53,7 +53,7 @@ function index() {
               placeholder="Password" 
               className="App-input" 
             />
-            <button type="submit" disabled={!username || !password}>Enter</button>
+            <button type="submit" disabled={!username || !password}>Sign In</button>
           </div>
         </form>
       </header>
