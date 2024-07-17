@@ -33,15 +33,27 @@ function index() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // Ensure IP address and user agent are included in the POST request body
     fetch("http://127.0.0.1:8080/api/echo", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({
+        username,
+        password,
+        ipAddress, // Include the IP address
+        userAgent // Include the user agent
+      }),
     })
     .then((response) => response.json())
-    // Handle response...
+    .then((data) => {
+      // Handle the response data
+      console.log(data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
   };
 
   return (

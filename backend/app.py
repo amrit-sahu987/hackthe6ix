@@ -17,9 +17,7 @@ api.add_resource(Message, '/api/hello')
 
 @app.route("/api/home", methods=['GET'])
 def return_home():
-    return jsonify({
-        'message': ""
-    })
+    return app.send_static_file('index.tsx')
 
 @app.route("/api/userInfo", methods=['GET'])
 def user_info():
