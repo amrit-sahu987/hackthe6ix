@@ -23,17 +23,16 @@ function index() {
     fetch("https://api.ipify.org?format=json")
       .then((response) => response.json())
       .then((data) => {
-        setIpAddress(data.ip); // Store the IP address
+        setIpAddress(data.ip);
       })
       .catch((error) => console.error("Error fetching IP address:", error));
-  }, []); // This effect runs once on component mount
+  }, []); 
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Ensure IP address and user agent are included in the POST request body
     fetch("http://127.0.0.1:8080/api/echo", {
       method: 'POST',
       headers: {
@@ -42,13 +41,12 @@ function index() {
       body: JSON.stringify({
         username,
         password,
-        ipAddress, // Include the IP address
-        userAgent // Include the user agent
+        ipAddress, 
+        userAgent
       }),
     })
     .then((response) => response.json())
     .then((data) => {
-      // Handle the response data
       console.log(data);
     })
     .catch((error) => {
@@ -56,14 +54,45 @@ function index() {
     });
   };
 
-  return (
+return (
+  <div className="App">
+    <header className="App-header">
+      <h1>Cloaked Website</h1>
+    </header>
+
     <div>
       <h1>{message}</h1>
       <p>User Agent: {userAgent}</p>
-      <p>Your IP Address: {ipAddress}</p> {/* Display the IP address here */}
-      {/* Rest of your component */}
+      <p>Your IP Address: {ipAddress}</p>
     </div>
-  );
+
+    <div>
+      <form onSubmit={handleSubmit} className="Text">
+      
+        <div>
+          <input 
+            type="text" 
+            value={username} 
+            onChange={e => setUsername(e.target.value)} 
+            placeholder="Username" 
+            className="App-input"/>
+        </div>
+
+        <div>
+          <input 
+            type="password" 
+            value={password} 
+            onChange={e => setPassword(e.target.value)} 
+            placeholder="Password" 
+            className="App-input" />
+        </div>
+        <div>  
+          <button type="submit" disabled={!username || !password}>Sign In</button>
+        </div>
+      </form>
+    </div>
+  </div>
+);
 }
 
 export default index;
