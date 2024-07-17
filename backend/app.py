@@ -33,5 +33,12 @@ def echo():
         'password': data.get('password', '')
     })
 
+@app.route("/api/userAgent", methods=['POST'])
+def user_agent():
+    user_agent = request.json['userAgent']
+    return jsonify({
+        'userAgent': user_agent
+    })
+
 if __name__ == '__main__':
     app.run(debug=True, port=8080)

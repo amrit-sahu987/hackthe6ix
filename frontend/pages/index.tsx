@@ -1,9 +1,27 @@
 import React, {useEffect, useState} from "react";
 
 function index() {
-  const [message, setMessage] = useState("Loading");
   const [userAgent, setUserAgent] = useState(""); 
 
+  useEffect(() => {
+    const userAgent = navigator.userAgent; 
+
+    fetch('http://127.0.0.1:8080/api/userAgent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userAgent
+      }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      setUserAgent(data.userAgent);
+    });
+  }, []);
+
+  const [message, setMessage] = useState("Loading");
 
   useEffect(() => {
     fetch("http://127.0.0.1:8080/api/home")
@@ -11,11 +29,6 @@ function index() {
     .then((data) => {
       setMessage(data.message);
     });
-  }, []);
-
-  useEffect(() => {
-    const userAgent = navigator.userAgent;
-    setUserAgent(userAgent); 
   }, []);
 
   const [username, setUsername] = useState("");
