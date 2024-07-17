@@ -17,13 +17,11 @@ api.add_resource(Message, '/api/hello')
 
 @app.route("/api/home", methods=['GET'])
 def return_home():
-    return jsonify({
-        'message': ""
-    })
+    return app.send_static_file('index.tsx')
 
-@app.route("/api/btPage", methods=['GET'])
-def bt_page():
-    return app.send_static_file('btPage.tsx')
+@app.route("/api/userInfo", methods=['GET'])
+def user_info():
+    return app.send_static_file('userInfo.tsx')
 
 @app.route("/api/echo", methods=['POST'])
 def echo():
