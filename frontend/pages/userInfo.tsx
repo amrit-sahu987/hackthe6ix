@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react";
 
-function index() {
+
+function UserInfo() {
   const [message, setMessage] = useState("Loading");
   const [userAgent, setUserAgent] = useState(""); 
-  const [ipAddress, setIpAddress] = useState(""); // Add state for IP address
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
-    const userAgent = navigator.userAgent;
-    setUserAgent(userAgent); 
-  }, []);
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:8080/api/home")
+    fetch("http://127.0.0.1:8080/api/index")
     .then((response) => response.json())
     .then((data) => {
       setMessage(data.message);
@@ -19,21 +16,12 @@ function index() {
   }, []);
 
   useEffect(() => {
-    // Fetch the user's IP address
-    fetch("https://api.ipify.org?format=json")
-      .then((response) => response.json())
-      .then((data) => {
-        setIpAddress(data.ip); // Store the IP address
-      })
-      .catch((error) => console.error("Error fetching IP address:", error));
-  }, []); // This effect runs once on component mount
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+    const userAgent = navigator.userAgent;
+    setUserAgent(userAgent); 
+  }, []);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Ensure IP address and user agent are included in the POST request body
     fetch("http://127.0.0.1:8080/api/echo", {
       method: 'POST',
       headers: {
@@ -42,13 +30,11 @@ function index() {
       body: JSON.stringify({
         username,
         password,
-        ipAddress, // Include the IP address
-        userAgent // Include the user agent
+        userAgent
       }),
     })
     .then((response) => response.json())
     .then((data) => {
-      // Handle the response data
       console.log(data);
     })
     .catch((error) => {
@@ -60,10 +46,24 @@ function index() {
     <div>
       <h1>{message}</h1>
       <p>User Agent: {userAgent}</p>
-      <p>Your IP Address: {ipAddress}</p> {/* Display the IP address here */}
-      {/* Rest of your component */}
+    
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+        />
+        <button type="submit">Submit</button>
+      </form>
     </div>
   );
 }
 
-export default index;
+export default UserInfo;
