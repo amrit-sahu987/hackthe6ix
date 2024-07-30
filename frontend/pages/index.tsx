@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 
 function index() {
-  const [userAgent, setUserAgent] = useState(""); 
+  const [userAgent, setUserAgent] = useState("");
+  const [ipAddress, setIpAddress] = useState(""); 
 
   useEffect(() => {
-    const userAgent = navigator.userAgent; 
-
+    const userAgent = navigator.userAgent;
     fetch('http://127.0.0.1:8080/api/userAgent', {
       method: 'POST',
       headers: {
@@ -20,14 +20,36 @@ function index() {
       setUserAgent(data.userAgent);
     });
   }, []);
-
-  const [message, setMessage] = useState("Loading");
+  
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetch("http://127.0.0.1:8080/api/home")
     .then((response) => response.json())
     .then((data) => {
       setMessage(data.message);
+    });
+  }, []);
+
+  useEffect(() => {
+    var ipData = "hello";
+    fetch("https://api.ipify.org?format=json")
+      .then((response) => response.json())
+      .then((data) => {
+        ipData = JSON.stringify(data.ip);
+        //setIpAddress(ipData);
+      });
+    setIpAddress(ipData);
+    fetch('http://127.0.0.1:8080/api/ipAddress', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: "",
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      setIpAddress(data.ip_address);
     });
   }, []);
 
@@ -59,6 +81,7 @@ function index() {
 
       <div>
         <p className="Text">User Agent: {userAgent}<br /></p>
+        <p className="Text">Ip Address: {ipAddress}<br /></p>
         <p className="Text">{message}</p>
         <form onSubmit={handleSubmit} className="Text">
         

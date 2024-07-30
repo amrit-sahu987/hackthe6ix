@@ -6,16 +6,16 @@ function index() {
   const [ipAddress, setIpAddress] = useState(""); // Add state for IP address
 
   useEffect(() => {
+    const userAgent = navigator.userAgent;
+    setUserAgent(userAgent); 
+  }, []);
+
+  useEffect(() => {
     fetch("http://127.0.0.1:8080/api/home")
     .then((response) => response.json())
     .then((data) => {
       setMessage(data.message);
     });
-  }, []);
-
-  useEffect(() => {
-    const userAgent = navigator.userAgent;
-    setUserAgent(userAgent); 
   }, []);
 
   useEffect(() => {
