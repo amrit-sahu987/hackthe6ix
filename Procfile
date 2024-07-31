@@ -1,1 +1,1 @@
-web: gnuicorn wsgi:app
+./runsite.sh
