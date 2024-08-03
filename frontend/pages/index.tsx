@@ -39,6 +39,19 @@ const SearchFilter: React.FC = () => {
     fetchSuggestions();
   }, [query]);
 
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        handleSearch();
+      }
+    };
+
+    window.addEventListener('keypress', handleKeyPress);
+    return () => {
+      window.removeEventListener('keypress', handleKeyPress);
+    };
+  }, [query, allergens]);
+
   const handleSearch = async () => {
     setLoading(true);
     try {
@@ -76,27 +89,27 @@ const SearchFilter: React.FC = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div className="container">
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for meals"
-          style={{ flex: 1 }}
+          className="input"
         />
         <button onClick={() => setShowFilters(!showFilters)}>Filter</button>
       </div>
       {suggestions.length > 0 && (
-        <ul>
+        <ul className="suggestions">
           {suggestions.map((suggestion, index) => (
-            <li key={index} onClick={() => setQuery(suggestion)}>
+            <li key={index} className="suggestion" onClick={() => setQuery(suggestion)}>
               {suggestion}
             </li>
           ))}
         </ul>
       )}
       {showFilters && (
-        <div>
+        <div className="filters">
           <div>
             <label>
               <input
@@ -129,9 +142,9 @@ const SearchFilter: React.FC = () => {
       <button onClick={handleSearch}>Search</button>
 
       {loading ? (
-        <p>Loading...</p>
+        <p className="loading">Loading...</p>
       ) : (
-        <ul>
+        <ul className="results">
           {results.map((result: Meal) => (
             <li key={result.id} onClick={() => handleMealClick(result)}>
               {result.name}
@@ -141,29 +154,8 @@ const SearchFilter: React.FC = () => {
       )}
 
       {selectedMeal && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-          onClick={handleClosePopup}
-        >
-          <div
-            style={{
-              backgroundColor: 'white',
-              padding: '20px',
-              borderRadius: '10px',
-              position: 'relative'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="popupOverlay" onClick={handleClosePopup}>
+          <div className="popup" onClick={(e) => e.stopPropagation()}>
             <h2>{selectedMeal.name}</h2>
             <p>Allergens:</p>
             <ul>
