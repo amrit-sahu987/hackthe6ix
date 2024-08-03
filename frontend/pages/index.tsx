@@ -11,98 +11,46 @@ const SearchFilter: React.FC = () => {
   const [allergens, setAllergens] = useState<string[]>([]);
   const [results, setResults] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-
-  useEffect(() => {
-    const fetchSuggestions = async () => {
-      if (query) {
-        try {
-          const url = new URL('http://127.0.0.1:5000/api/autocomplete');
-          url.searchParams.append('q', query);
-
-          const response = await fetch(url.toString());
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          const data: string[] = await response.json();
-          setSuggestions(data);
-        } catch (error) {
-          console.error('Error fetching autocomplete suggestions', error);
-        }
-      } else {
-        setSuggestions([]);
-      }
-    };
-
-    fetchSuggestions();
-  }, [query]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleSearch = async () => {
     setLoading(true);
-    try {
-      const url = new URL('http://127.0.0.1:5000/api/search');
-      url.searchParams.append('q', query);
-      allergens.forEach(allergen => url.searchParams.append('allergens', allergen));
-
-      const response = await fetch(url.toString());
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data: Meal[] = await response.json();
-      setResults(data);
-    } catch (error) {
-      console.error('Error fetching search results', error);
-    }
+    // Fetching data code...
     setLoading(false);
   };
 
-  const handleAllergenChange = (allergen: string) => {
-    setAllergens(prev =>
-      prev.includes(allergen)
-        ? prev.filter(a => a !== allergen)
-        : [...prev, allergen]
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleAllergenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = event.target;
+    setAllergens((prev) =>
+      checked ? [...prev, value] : prev.filter((allergen) => allergen !== value)
     );
   };
 
-  const handleMealClick = (meal: Meal) => {
-    setSelectedMeal(meal);
-  };
-
-  const handleClosePopup = () => {
-    setSelectedMeal(null);
-  };
-
   return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div className="container">
+      <h1>Meal Search</h1>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for meals"
-          style={{ flex: 1 }}
         />
-        <button onClick={() => setShowFilters(!showFilters)}>Filter</button>
-      </div>
-      {suggestions.length > 0 && (
-        <ul>
-          {suggestions.map((suggestion, index) => (
-            <li key={index} onClick={() => setQuery(suggestion)}>
-              {suggestion}
-            </li>
-          ))}
-        </ul>
-      )}
-      {showFilters && (
-        <div>
-          <div>
+        <button className="filter-button" onClick={toggleDropdown}>
+          Filter
+        </button>
+        {isDropdownOpen && (
+          <div className="dropdown-menu">
             <label>
               <input
                 type="checkbox"
                 value="gluten"
-                onChange={() => handleAllergenChange('gluten')}
+                onChange={handleAllergenChange}
               />
               Gluten
             </label>
@@ -110,7 +58,7 @@ const SearchFilter: React.FC = () => {
               <input
                 type="checkbox"
                 value="dairy"
-                onChange={() => handleAllergenChange('dairy')}
+                onChange={handleAllergenChange}
               />
               Dairy
             </label>
@@ -118,28 +66,32 @@ const SearchFilter: React.FC = () => {
               <input
                 type="checkbox"
                 value="fish"
-                onChange={() => handleAllergenChange('fish')}
+                onChange={handleAllergenChange}
               />
               Fish
             </label>
             {/* Add more allergens as needed */}
           </div>
+        )}
+        <button onClick={handleSearch}>Search</button>
+      </div>
+      {loading ? (
+        <p className="no-results">Loading...</p>
+      ) : (
+        <div className="search-results">
+          {results.length > 0 ? (
+            <ul>
+              {results.map((result: Meal) => (
+                <li key={result.id} onClick={() => setSelectedMeal(result)}>
+                  {result.name}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="no-results">No results found. Try searching for something else.</p>
+          )}
         </div>
       )}
-      <button onClick={handleSearch}>Search</button>
-
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul>
-          {results.map((result: Meal) => (
-            <li key={result.id} onClick={() => handleMealClick(result)}>
-              {result.name}
-            </li>
-          ))}
-        </ul>
-      )}
-
       {selectedMeal && (
         <div
           style={{
@@ -153,13 +105,14 @@ const SearchFilter: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center'
           }}
-          onClick={handleClosePopup}
+          onClick={() => setSelectedMeal(null)}
         >
           <div
             style={{
               backgroundColor: 'white',
               padding: '20px',
               borderRadius: '10px',
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
               position: 'relative'
             }}
             onClick={(e) => e.stopPropagation()}
@@ -171,7 +124,17 @@ const SearchFilter: React.FC = () => {
                 <li key={index}>{allergen}</li>
               ))}
             </ul>
-            <button onClick={handleClosePopup}>Close</button>
+            <button onClick={() => setSelectedMeal(null)} style={{
+              marginTop: '10px',
+              padding: '10px 20px',
+              borderRadius: '5px',
+              border: 'none',
+              backgroundColor: '#007BFF',
+              color: 'white',
+              cursor: 'pointer'
+            }}>
+              Close
+            </button>
           </div>
         </div>
       )}
@@ -179,14 +142,4 @@ const SearchFilter: React.FC = () => {
   );
 };
 
-const Home = () => {
-  return (
-    <div>
-      <h1>Meal Search</h1>
-      //<SearchFilter />
-    </div>
-  );
-};
-
-export default Home;
-
+export default SearchFilter;
