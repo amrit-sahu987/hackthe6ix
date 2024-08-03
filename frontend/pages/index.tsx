@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface Meal {
   id: number;
@@ -13,6 +13,31 @@ const SearchFilter: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (query) {
+        try {
+          const url = new URL('http://127.0.0.1:5000/api/autocomplete');
+          url.searchParams.append('q', query);
+
+          const response = await fetch(url.toString());
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const data: string[] = await response.json();
+          setSuggestions(data);
+        } catch (error) {
+          console.error('Error fetching autocomplete suggestions', error);
+        }
+      } else {
+        setSuggestions([]);
+      }
+    };
+
+    fetchSuggestions();
+  }, [query]);
 
   const handleSearch = async () => {
     setLoading(true);
@@ -61,6 +86,15 @@ const SearchFilter: React.FC = () => {
         />
         <button onClick={() => setShowFilters(!showFilters)}>Filter</button>
       </div>
+      {suggestions.length > 0 && (
+        <ul>
+          {suggestions.map((suggestion, index) => (
+            <li key={index} onClick={() => setQuery(suggestion)}>
+              {suggestion}
+            </li>
+          ))}
+        </ul>
+      )}
       {showFilters && (
         <div>
           <div>

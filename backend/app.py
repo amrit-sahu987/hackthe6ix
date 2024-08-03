@@ -29,5 +29,11 @@ def search_meals():
 
     return jsonify(filtered_meals)
 
+@app.route('/api/autocomplete', methods=['GET'])
+def autocomplete():
+    query = request.args.get('q', '').lower()
+    suggestions = [meal['name'] for meal in meals if query in meal['name'].lower()]
+    return jsonify(suggestions)
+
 if __name__ == '__main__':
     app.run(debug=True)
