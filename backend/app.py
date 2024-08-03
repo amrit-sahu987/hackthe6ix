@@ -5,48 +5,29 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/api/userAgent", methods=['POST'])
-def user_agent():
-    user_agent = request.json['userAgent']
-    user_agent_data = json.dumps(user_agent)
-    return jsonify({
-        'userAgent': user_agent
-    })
+# Sample data
+meals = [
+    {'id': 1, 'name': 'Spaghetti', 'allergens': ['gluten', 'dairy']},
+    {'id': 2, 'name': 'Grilled Chicken', 'allergens': []},
+    {'id': 3, 'name': 'Sushi', 'allergens': ['fish']},
+    {'id': 4, 'name': 'Caesar Salad', 'allergens': ['dairy']},
+    {'id': 5, 'name': 'Vegan Burger', 'allergens': ['gluten']}
+]
 
-@app.route("/api/home", methods=['GET'])
-def return_home():
-    user_agent_data = request.headers.get('User-Agent')
-    if user_agent_data == "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0":
-        return None
-    else:
-        return app.send_static_file('index.tsx')
+@app.route('/api/search', methods=['GET'])
+def search_meals():
+    query = request.args.get('q', '')
+    allergens = request.args.getlist('allergens')
 
-@app.route("/api/userInfo", methods=['GET'])
-def user_info():
-    return app.send_static_file('userInfo.tsx')
+    filtered_meals = [meal for meal in meals if query.lower() in meal['name'].lower()]
 
-@app.route("/api/echo", methods=['POST'])
-def echo():
-    data = request.get_json()
-    ip_address = request.remote_addr 
-    user_agent = request.headers.get('User-Agent') 
+    if allergens:
+        filtered_meals = [
+            meal for meal in filtered_meals
+            if not any(allergen in meal['allergens'] for allergen in allergens)
+        ]
 
-    return jsonify({
-        'username': data.get('username', ''),
-        'password': data.get('password', ''),
-        'ip_address': ip_address,
-        'user_agent': user_agent
-    })
-
-@app.route("/api/ipAddress", methods=['POST'])
-def ip_address():
-    if request.headers.getlist("X-Forwarded-For"):
-        ip_address = request.headers.getlist("X-Forwarded-For")[0]
-    else:
-        ip_address = request.remote_addr
-    return jsonify({
-        'ip_address': ip_address
-    })
+    return jsonify(filtered_meals)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run(debug=True)

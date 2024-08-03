@@ -1,71 +1,158 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 
-const IndexPage: React.FC = () => {
-  const [ipAddress, setIpAddress] = useState('');
-  const [userAgent, setUserAgent] = useState('');
-  const [message, setMessage] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+interface Meal {
+  id: number;
+  name: string;
+  allergens: string[];
+}
 
-  useEffect(() => {
-    const fetchIpAddress = async () => {
-      try {
-        const response = await axios.post('/api/ipAddress');
-        console.log('IP Address response:', response.data);
-        setIpAddress(response.data.ip_address);
-      } catch (error) {
-        console.error('Error fetching IP address:', error);
+const SearchFilter: React.FC = () => {
+  const [query, setQuery] = useState('');
+  const [allergens, setAllergens] = useState<string[]>([]);
+  const [results, setResults] = useState<Meal[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
+
+  const handleSearch = async () => {
+    setLoading(true);
+    try {
+      const url = new URL('http://127.0.0.1:5000/api/search');
+      url.searchParams.append('q', query);
+      allergens.forEach(allergen => url.searchParams.append('allergens', allergen));
+
+      const response = await fetch(url.toString());
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
-    };
+      const data: Meal[] = await response.json();
+      setResults(data);
+    } catch (error) {
+      console.error('Error fetching search results', error);
+    }
+    setLoading(false);
+  };
 
-    const fetchUserAgent = () => {
-      setUserAgent(navigator.userAgent);
-    };
+  const handleAllergenChange = (allergen: string) => {
+    setAllergens(prev =>
+      prev.includes(allergen)
+        ? prev.filter(a => a !== allergen)
+        : [...prev, allergen]
+    );
+  };
 
-    fetchIpAddress();
-    fetchUserAgent();
-  }, []);
+  const handleMealClick = (meal: Meal) => {
+    setSelectedMeal(meal);
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleClosePopup = () => {
+    setSelectedMeal(null);
   };
 
   return (
     <div>
-      <header className="App-header">
-        <h1>Heading</h1>
-      </header>
-
-      <div>
-        <p className="Text">User Agent: {userAgent}<br /></p>
-        <p className="Text">Ip Address: {ipAddress}<br /></p>
-        <p className="Text">{message}</p>
-        <form onSubmit={handleSubmit} className="Text">
-          <div>
-            <input 
-              type="text" 
-              value={username} 
-              onChange={e => setUsername(e.target.value)} 
-              placeholder="Username" 
-              className="App-input"/>
-          </div>
-
-          <div>
-            <input 
-              type="password" 
-              value={password} 
-              onChange={e => setPassword(e.target.value)} 
-              placeholder="Password" 
-              className="App-input" />
-          </div>
-          <div>  
-            <button type="submit" disabled={!username || !password}>Sign In</button>
-          </div>
-        </form>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search for meals"
+          style={{ flex: 1 }}
+        />
+        <button onClick={() => setShowFilters(!showFilters)}>Filter</button>
       </div>
+      {showFilters && (
+        <div>
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                value="gluten"
+                onChange={() => handleAllergenChange('gluten')}
+              />
+              Gluten
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="dairy"
+                onChange={() => handleAllergenChange('dairy')}
+              />
+              Dairy
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="fish"
+                onChange={() => handleAllergenChange('fish')}
+              />
+              Fish
+            </label>
+            {/* Add more allergens as needed */}
+          </div>
+        </div>
+      )}
+      <button onClick={handleSearch}>Search</button>
+
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ul>
+          {results.map((result: Meal) => (
+            <li key={result.id} onClick={() => handleMealClick(result)}>
+              {result.name}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {selectedMeal && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          onClick={handleClosePopup}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '10px',
+              position: 'relative'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2>{selectedMeal.name}</h2>
+            <p>Allergens:</p>
+            <ul>
+              {selectedMeal.allergens.map((allergen: string, index: number) => (
+                <li key={index}>{allergen}</li>
+              ))}
+            </ul>
+            <button onClick={handleClosePopup}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default IndexPage;
+const Home = () => {
+  return (
+    <div>
+      <h1>Meal Search</h1>
+      //<SearchFilter />
+    </div>
+  );
+};
+
+export default Home;
+
