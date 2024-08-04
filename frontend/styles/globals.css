@@ -1,108 +1,123 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-.App{
-
-}
-
-.App-header {
-  background-color: #282c34;
+body {
+  background: linear-gradient(to right, #ece9e6, #ffffff);
+  font-family: 'Arial', sans-serif;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-  animation: fadeIn 1s ease-in-out;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+.container {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
 }
 
-form {
-  margin-top: 250px;
-  animation: slideIn 1s ease-in-out;
+.search-container {
+  display: flex;
+  width: 100%;
 }
 
-@keyframes slideIn {
-  0% {
-    transform: translateY(-100px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
 }
 
-.App-input {
-  padding: 10px;
-  font-size: 1em;
-  border-radius: 5px;
+input[type="text"] {
+  padding: 15px;
+  border-radius: 10px;
   border: 1px solid #ddd;
-  width: 300px;
-  color: black; 
-  margin-bottom: 10px; 
-  animation: fadeIn 1s ease-in-out;
+  width: 70%;
+  margin-right: 10px;
 }
 
-input:hover {
-  background-color: #ddddddd2;
-  transition: background-color 0.3s ease-in-out;
+.filter-button, .search-button {
+  padding: 15px 25px;
+  border-radius: 10px;
+  border: none;
+  background-color: #007BFF;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
 }
 
-input:hover::placeholder {
-  color:#4d4d4d;
-  transition: color 0.3s ease-in-out;
+.filter-button:hover, .search-button:hover {
+  background-color: #0056b3;
+}
+
+.dropdown-menu {
+  position: absolute;
+  background-color: white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 10px;
+  right: 20%;
+  text-align: left;
+}
+
+.dropdown-menu label {
+  display: block;
+  margin-bottom: 5px;
+  cursor: pointer;
 }
 
 button {
-  margin-left: 10px;
-  padding: 10px 20px;
-  font-size: 1em;
-  border-radius: 5px;
+  padding: 15px 25px;
+  border-radius: 10px;
   border: none;
-  color: white;
   background-color: #007BFF;
+  color: white;
+  font-size: 1rem;
   cursor: pointer;
-  animation: slideIn 1s ease-in-out;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
   background-color: #0056b3;
-  transition: background-color 0.3s ease-in-out;
 }
 
-.Text {
-  text-align: center;
-  font-size: large;
-  animation: fadeIn 1s ease-in-out;
+.no-results {
+  margin-top: 20px;
+  font-size: 1rem;
+  color: #777;
 }
 
-.container {
-  display: flex;
-  align-items: center;
+.search-results {
+  margin-top: 20px;
 }
 
-.input {
-  flex: 1;
+.search-results li {
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+  transition: transform 0.2s;
+}
+
+.search-results li:hover {
+  transform: scale(1.02);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .suggestions {
+  list-style-type: none;
+  padding: 5px 10px;
+  margin: 0;
+  background: white;
   border: 1px solid #ccc;
-  max-height: 150px;
-  overflow-y: auto;
-  background-color: white;
   position: absolute;
-  width: calc(100% - 60px); /* Adjust based on button width */
   z-index: 1;
+  border-radius: 10px; /* Add rounded corners to the bottom */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
 }
 
 .suggestion {
@@ -112,35 +127,4 @@ button:hover {
 
 .suggestion:hover {
   background-color: #f0f0f0;
-}
-
-.filters {
-  margin-top: 10px;
-}
-
-.loading {
-  margin-top: 10px;
-}
-
-.results {
-  margin-top: 10px;
-}
-
-.popupOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.popup {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  position: relative;
 }
