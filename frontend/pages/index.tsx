@@ -15,7 +15,7 @@ const SearchFilter: React.FC = () => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false); // Add this state
+  const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -56,7 +56,7 @@ const SearchFilter: React.FC = () => {
 
   const handleSearch = async () => {
     setLoading(true);
-    setHasSearched(true); // Update this state when search is performed
+    setHasSearched(true);
     try {
       const url = new URL('http://127.0.0.1:5000/api/search');
       url.searchParams.append('q', query);
@@ -178,17 +178,24 @@ const SearchFilter: React.FC = () => {
       </div>
       {selectedMeal && (
         <div className="popupOverlay" onClick={handleClosePopup}>
-          <div className="popup" onClick={(e) => e.stopPropagation()}>
-            <h2>{selectedMeal.name}</h2>
-            <p>Allergens:</p>
-            <ul>
+        <div className="popup" onClick={(e) => e.stopPropagation()}>
+          <h2>{selectedMeal.name}</h2>
+          <p>Allergens:</p>
+          {selectedMeal.allergens.length > 0 ? (
+            <ul className="allergens-list">
               {selectedMeal.allergens.map((allergen: string, index: number) => (
-                <li key={index}>{allergen}</li>
+                <li key={index}>
+                  {/* Replace with appropriate icon */}
+                  <span role="img" aria-label={allergen}>⚠️</span> {allergen}
+                </li>
               ))}
             </ul>
-            <button onClick={handleClosePopup}>Close</button>
-          </div>
+          ) : (
+            <p>No allergens listed.</p>
+          )}
+          <button className="close-button" onClick={handleClosePopup}>Close</button>
         </div>
+      </div>      
       )}
     </div>
   );

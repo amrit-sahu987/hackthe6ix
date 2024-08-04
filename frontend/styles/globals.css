@@ -18,15 +18,15 @@ body {
   text-align: center;
 }
 
-.search-container {
-  display: flex;
-  width: 100%;
-}
-
 h1 {
   font-size: 2rem;
   margin-bottom: 20px;
   color: #333;
+}
+
+.search-container {
+  display: flex;
+  width: 100%;
 }
 
 input[type="text"] {
@@ -70,27 +70,6 @@ input[type="text"] {
   cursor: pointer;
 }
 
-button {
-  padding: 15px 25px;
-  border-radius: 10px;
-  border: none;
-  background-color: #007BFF;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-.no-results {
-  margin-top: 20px;
-  font-size: 1rem;
-  color: #777;
-}
-
 .search-results {
   margin-top: 20px;
 }
@@ -101,11 +80,18 @@ button:hover {
   background-color: #f9f9f9;
   margin-bottom: 10px;
   transition: transform 0.2s;
+  list-style-type: none; /* Remove bullet points */
 }
 
 .search-results li:hover {
   transform: scale(1.02);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.no-results {
+  margin-top: 20px;
+  font-size: 1rem;
+  color: #777;
 }
 
 .suggestions {
@@ -116,8 +102,8 @@ button:hover {
   border: 1px solid #ccc;
   position: absolute;
   z-index: 1;
-  border-radius: 10px; /* Add rounded corners to the bottom */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .suggestion {
@@ -127,4 +113,66 @@ button:hover {
 
 .suggestion:hover {
   background-color: #f0f0f0;
+}
+
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.popup {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  text-align: left;
+  width: 300px; /* Adjusted width for better content fit */
+}
+
+.popup h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.allergens-list {
+  list-style-type: none; /* Remove bullet points from allergens */
+  padding: 0;
+  margin: 10px 0;
+}
+
+.allergens-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.allergens-list span {
+  margin-right: 10px;
+  font-size: 1.2rem; /* Icon size */
+}
+
+.close-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%; /* Full-width button */
+}
+
+.close-button:hover {
+  background-color: #0056b3;
 }
