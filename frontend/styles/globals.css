@@ -54,7 +54,6 @@ input[type="text"] {
 }
 
 .dropdown-menu {
-  position: absolute;
   background-color: white;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
